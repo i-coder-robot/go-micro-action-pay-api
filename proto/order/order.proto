@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package order;
+
+service Orders {
+    // 查询自己订单总和
+    rpc SelfAmount(Request) returns (Response) {}
+    // 查询自己的订单
+    rpc SelfList(Request) returns (Response) {}
+    // 获取订单列表
+    rpc List(Request) returns (Response) {}
+    // 根据 唯一 获取订单
+    rpc Get(Request) returns (Response) {}
+    // 更新订单
+    rpc Update(Request) returns (Response) {}
+}
+
+
+
+message Order {
+    string id = 1; //  UUID 前端生产全局唯一
+    string store_id = 2;    // 商户门店编号 收款账号ID userID
+    string method = 3;    // 付款方式 [支付宝、微信、银联等]
+    string auth_code = 4; // 付款码
+    string title = 5;   // 订单标题
+    int64 total_amount = 6; // 订单总金额
+    int64 fee = 7; // 手续费
+    string order_no = 8;    // 订单编号
+    string operator_id = 9; // 商户操作员编号
+    string terminal_id = 10; // 商户机具终端编号
+    int64 stauts = 11;    // 订单状态
+    string created_at = 12;
+    string updated_at = 13;
+}
+message ListQuery{
+    int64 limit = 1;          // 返回数量
+    int64 page = 2;           // 页面
+    string sort = 3;          // 排序
+    string where = 4;
+    Order order = 5;
+}
+message Request {
+    ListQuery list_query = 1;           // 列表分页请求
+    Order order = 2;                      // 请求支付订单
+}
+
+message Response {
+    bool valid = 1;
+    int64 total = 2;
+    Order order = 3;
+    repeated Order orders = 4;
+}

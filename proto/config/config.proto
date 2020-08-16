@@ -1,0 +1,61 @@
+
+syntax = "proto3";
+
+package config;
+
+service Configs {
+    // 用户通过 token 自己更新数据
+    rpc SelfUpdate(Request) returns (Response) {}
+    // 根据 唯一 获取用户
+    rpc Info(Request) returns (Response) {}
+    // 获取配置列表
+    rpc List(Request) returns (Response) {}
+    // 根据 唯一 获取配置
+    rpc Get(Request) returns (Response) {}
+    // 创建配置
+    rpc Create(Request) returns (Response) {}
+    // 更新配置
+    rpc Update(Request) returns (Response) {}
+    // 删除配置
+    rpc Delete(Request) returns (Response) {}
+}
+
+message Wechat {
+    int64 id = 1;
+    string app_id = 2;
+    string mch_id = 3;
+    string api_key = 4;
+    string sub_app_id = 5;
+    string sub_mch_id = 6;
+    int64 fee = 7;// 手续费比率 万分率
+    bool sandbox = 8;
+}
+
+message Config {
+    string id = 1;    // 商户ID userID;           // 商品及服务编码
+    string store_name = 2;    // 商户门店账号 (商家账号和商家id必须有一个)
+    int64 alipay_id = 3;          // 支付宝ID
+    int64 wechat_id = 4;          // 微信ID
+    bool stauts = 5;        // 状态
+    Wechat wechat = 6;      // 微信配置
+    string created_at = 7;
+    string updated_at = 8;
+}
+message ListQuery{
+    int64 limit = 1;          // 返回数量
+    int64 page = 2;           // 页面
+    string sort = 3;          // 排序
+    string where = 4;          // 查询条件
+    Config config = 5;
+}
+message Request {
+    ListQuery list_query = 1;               // 列表分页请求
+    Config config = 2;                      // 请求支付配置
+}
+
+message Response {
+    bool valid = 1;
+    int64 total = 2;
+    Config config = 3;
+    repeated Config configs = 4;
+}
